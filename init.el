@@ -35,6 +35,10 @@
 
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/") t)
+
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/"))
+
 ;; keep the installed packages in .emacs.d
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 (package-initialize)
@@ -47,9 +51,17 @@
 
 (when (eq system-type 'darwin)
   (progn
-        (setq mac-command-modifier 'meta)
-        (setq mac-option-modifier 'super)
-        (message "Command is now bound to META and Option is bound to SUPER.")))
+    (setq mac-command-modifier 'meta)
+    (setq mac-option-modifier 'super)
+    (message "Command is now bound to META and Option is bound to SUPER.")
+
+    ;; Fullscreen!
+    (setq ns-use-native-fullscreen nil) ; Not Lion style
+    (bind-key "<s-return>" 'toggle-frame-fullscreen)
+
+    ;; disable the key that minimizes emacs to the dock because I don't
+    ;; minimize my windows
+    (global-unset-key (kbd "C-z"))))
 
 ;; Always load newest byte code
 (setq load-prefer-newer t)
@@ -111,6 +123,12 @@
 
 ;; Newline at end of file
 (setq require-final-newline t)
+
+;; C-n insert new lines if the point is at the end o
+(setq next-line-add-newlines t)
+
+;; trust all themes
+(setq custom-safe-themes t)
 
 ;; delete the selection with a keypress
 (delete-selection-mode t)
@@ -252,6 +270,8 @@ Start `ielm' if it's not already running."
 
 (use-package paredit
   :ensure t
+  :diminish paredit-mode
+  :bind ("M-k" . paredit-raise-sexp)
   :config
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   ;; enable in the *scratch* buffer
@@ -260,7 +280,7 @@ Start `ielm' if it's not already running."
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
 
-;; mark and edit all copies of the marked region simultaniously.
+;; mark and edit all copies of the marked region simultaneously.
 (use-package iedit
   :ensure t)
 
@@ -361,6 +381,7 @@ Start `ielm' if it's not already running."
 
 (use-package rainbow-mode
   :ensure t
+  :diminish rainbow-mode
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
@@ -380,11 +401,10 @@ Start `ielm' if it's not already running."
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
-
-
 (use-package cider
   :ensure t
   :config
+  :pin melpa-stable
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
@@ -392,6 +412,7 @@ Start `ielm' if it's not already running."
 
 (use-package ido
   :ensure t
+  :bind ("M-o" . ido-switch-buffer)
   :config
   (setq ido-enable-prefix nil
         ido-enable-flex-matching t
@@ -403,6 +424,21 @@ Start `ielm' if it's not already running."
         ido-auto-merge-work-directories-length -1)
   (ido-mode 1)
   (ido-everywhere 1))
+
+(use-package ido-vertical-mode
+  :ensure t
+  :config
+  (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
+  (setq ido-use-faces t)
+  (set-face-attribute 'ido-vertical-first-match-face nil
+                      :background nil
+                      :foreground "orange")
+  (set-face-attribute 'ido-vertical-only-match-face nil
+                      :background nil
+                      :foreground nil)
+  (set-face-attribute 'ido-vertical-match-face nil
+                      :foreground nil)
+  (ido-vertical-mode 1))
 
 (use-package ido-yes-or-no
   :ensure t
@@ -438,6 +474,7 @@ Start `ielm' if it's not already running."
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :config
   (global-company-mode))
 
@@ -451,12 +488,12 @@ Start `ielm' if it's not already running."
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
 
-(use-package flyspell
-  :config
-  (setq ispell-program-name "aspell" ; use aspell instead of ispell
-        ispell-extra-args '("--sug-mode=ultra"))
-  (add-hook 'text-mode-hook #'flyspell-mode)
-  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+;; (use-package flyspell
+;;   :config
+;;   (setq ispell-program-name "aspell" ; use aspell instead of ispell
+;;         ispell-extra-args '("--sug-mode=ultra"))
+;;   (add-hook 'text-mode-hook #'flyspell-mode)
+;;   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
 
 (use-package flycheck
   :ensure t
@@ -471,7 +508,7 @@ Start `ielm' if it's not already running."
 (use-package crux
   :ensure t
   :bind (("C-c o" . crux-open-with)
-         ("M-o" . crux-smart-open-line)
+         ;("M-o" . crux-smart-open-line)
          ("C-c n" . crux-cleanup-buffer-or-region)
          ("C-c f" . crux-recentf-ido-find-file)
          ("C-M-z" . crux-indent-defun)
@@ -524,7 +561,7 @@ Start `ielm' if it's not already running."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
+    (ido-vertical-mode iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
  '(safe-local-variable-values
    (quote
     ((checkdoc-package-keywords-flag)
