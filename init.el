@@ -42,8 +42,14 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
-(setq user-full-name "Bozhidar Batsov"
-      user-mail-address "bozhidar@batsov.com")
+(setq user-full-name "Jorge Gomez"
+      user-mail-address "jorgem@fastmail.fm")
+
+(when (eq system-type 'darwin)
+  (progn
+        (setq mac-command-modifier 'meta)
+        (setq mac-option-modifier 'super)
+        (message "Command is now bound to META and Option is bound to SUPER.")))
 
 ;; Always load newest byte code
 (setq load-prefer-newer t)
@@ -139,6 +145,12 @@
 (global-set-key (kbd "M-/") #'hippie-expand)
 (global-set-key (kbd "s-/") #'hippie-expand)
 
+(global-set-key (kbd "C-c <right>") #'next-buffer)
+(global-set-key (kbd "C-c <left>") #'previous-buffer)
+
+(global-set-key (kbd "C-+") #'text-scale-increase)
+(global-set-key (kbd "C--") #'text-scale-decrease)
+
 ;; replace buffer-menu with ibuffer
 (global-set-key (kbd "C-x C-b") #'ibuffer)
 
@@ -161,6 +173,17 @@
 
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
+
+(set-frame-font "Hack 14" nil t)
+
+;; highlight the current line
+(global-hl-line-mode +1)
+
+;; delete extra spaces
+(setq backward-delete-char-untabify-method 'hungry)
+
+;; Show line numbers
+(global-linum-mode)
 
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
@@ -189,13 +212,10 @@ Start `ielm' if it's not already running."
   (add-hook 'ielm-mode-hook #'eldoc-mode)
   (add-hook 'ielm-mode-hook #'rainbow-delimiters-mode))
 
-(use-package zenburn-theme
+(use-package gruvbox-theme
   :ensure t
   :config
-  (load-theme 'zenburn t))
-
-;; highlight the current line
-(global-hl-line-mode +1)
+  (load-theme 'gruvbox t))
 
 (use-package avy
   :ensure t
@@ -239,6 +259,10 @@ Start `ielm' if it's not already running."
   (add-hook 'ielm-mode-hook #'paredit-mode)
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
+
+;; mark and edit all copies of the marked region simultaniously.
+(use-package iedit
+  :ensure t)
 
 (use-package paren
   :config
@@ -349,21 +373,14 @@ Start `ielm' if it's not already running."
   (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs empty trailing lines-tail)))
 
-(use-package inf-ruby
-  :ensure t
-  :config
-  (add-hook 'ruby-mode-hook #'inf-ruby-minor-mode))
-
-(use-package ruby-mode
-  :config
-  (add-hook 'ruby-mode-hook #'subword-mode))
-
 (use-package clojure-mode
   :ensure t
   :config
   (add-hook 'clojure-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+
+
 
 (use-package cider
   :ensure t
@@ -372,18 +389,6 @@ Start `ielm' if it's not already running."
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
-
-(use-package elixir-mode
-  :ensure t
-  :config
-  (add-hook 'elixir-mode #'subword-mode))
-
-(use-package erlang
-  :ensure t
-  :config
-  (when (eq system-type 'windows-nt)
-    (setq erlang-root-dir "C:/Program Files/erl7.2")
-    (add-to-list 'exec-path "C:/Program Files/erl7.2/bin")))
 
 (use-package ido
   :ensure t
@@ -396,12 +401,18 @@ Start `ielm' if it's not already running."
         ido-save-directory-list-file (expand-file-name "ido.hist" bozhidar-savefile-dir)
         ido-default-file-method 'selected-window
         ido-auto-merge-work-directories-length -1)
-  (ido-mode +1))
+  (ido-mode 1)
+  (ido-everywhere 1))
 
-(use-package ido-ubiquitous
+(use-package ido-yes-or-no
   :ensure t
   :config
-  (ido-ubiquitous-mode +1))
+  (ido-yes-or-no-mode 1))
+
+(use-package ido-completing-read+
+  :ensure t
+  :config
+  (ido-ubiquitous-mode 1))
 
 (use-package flx-ido
   :ensure t
@@ -412,7 +423,9 @@ Start `ielm' if it's not already running."
 
 (use-package smex
   :ensure t
-  :bind ("M-x" . smex))
+  :bind (("M-x" . smex)
+         ("M-X" . smex-major-mode-commands)
+         ("C-c C-c M-x" . execute-extend-command)))
 
 (use-package markdown-mode
   :ensure t)
@@ -440,8 +453,6 @@ Start `ielm' if it's not already running."
 
 (use-package flyspell
   :config
-  (when (eq system-type 'windows-nt)
-    (add-to-list 'exec-path "C:/Program Files (x86)/Aspell/bin/"))
   (setq ispell-program-name "aspell" ; use aspell instead of ispell
         ispell-extra-args '("--sug-mode=ultra"))
   (add-hook 'text-mode-hook #'flyspell-mode)
@@ -506,23 +517,6 @@ Start `ielm' if it's not already running."
         `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t))
 
-(when (eq system-type 'windows-nt)
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
-
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
-
-  (setq w32-pass-apps-to-system nil)
-  (setq w32-apps-modifier 'hyper) ; Menu/App key
-
-  (set-frame-font "Source Code Pro 12")
-  (add-to-list 'exec-path "C:/Program Files/Git/bin")
-  (add-to-list 'exec-path "C:/Program Files/Git/mingw64/bin")
-  (setenv "PATH" (concat "C:/Program Files/Git/bin;" "C:/Program Files/Git/mingw64/bin;" (getenv "PATH")))
-  ;; needed for arc-mode
-  (add-to-list 'exec-path "C:/Program Files/7-Zip"))
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -530,7 +524,7 @@ Start `ielm' if it's not already running."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (elixir-mode cask-mode buttercup rainbow-mode ztree zop-to-char zenburn-theme yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere ido-ubiquitous hydra flycheck flx-ido expand-region exec-path-from-shell evil erlang elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
+    (iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
  '(safe-local-variable-values
    (quote
     ((checkdoc-package-keywords-flag)
@@ -545,6 +539,6 @@ Start `ielm' if it's not already running."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((((class color) (min-colors 16777215)) (:background "#282828" :foreground "#fdf4c1")) (((class color) (min-colors 255)) (:background "#262626" :foreground "#ffffaf")))))
 
 ;;; init.el ends here

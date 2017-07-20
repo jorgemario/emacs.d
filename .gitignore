@@ -13,6 +13,8 @@ ede-projects.el
 custom.el
 places
 .smex-items
+smex-items
+network-security.data
 savefile/
 projectile-bookmarks.eld
 session*
