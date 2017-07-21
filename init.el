@@ -1,9 +1,8 @@
-;;; init.el --- Bozhidar's Emacs configuration
+;;; init.el --- Personal Emacs configuration
 ;;
 ;; Copyright (c) 2016 Bozhidar Batsov
 ;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: https://github.com/bbatsov/emacs.d
+;; URL: https://github.com/jorgemario/emacs.d
 ;; Keywords: convenience
 
 ;; This file is not part of GNU Emacs.
@@ -42,6 +41,7 @@
 ;; keep the installed packages in .emacs.d
 (setq package-user-dir (expand-file-name "elpa" user-emacs-directory))
 (package-initialize)
+
 ;; update the package metadata is the local cache is missing
 (unless package-archive-contents
   (package-refresh-contents))
@@ -73,11 +73,11 @@
 ;; warn when opening files bigger than 100MB
 (setq large-file-warning-threshold 100000000)
 
-(defconst bozhidar-savefile-dir (expand-file-name "savefile" user-emacs-directory))
+(defconst my-savefile-dir (expand-file-name "savefile" user-emacs-directory))
 
 ;; create the savefile dir if it doesn't exist
-(unless (file-exists-p bozhidar-savefile-dir)
-  (make-directory bozhidar-savefile-dir))
+(unless (file-exists-p my-savefile-dir)
+  (make-directory my-savefile-dir))
 
 ;; the toolbar is just a waste of valuable screen estate
 ;; in a tty tool-bar-mode does not properly auto-load, and is
@@ -215,7 +215,7 @@
 
 (use-package lisp-mode
   :config
-  (defun bozhidar-visit-ielm ()
+  (defun my-visit-ielm ()
     "Switch to default `ielm' buffer.
 Start `ielm' if it's not already running."
     (interactive)
@@ -223,7 +223,7 @@ Start `ielm' if it's not already running."
 
   (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
   (add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
-  (define-key emacs-lisp-mode-map (kbd "C-c C-z") #'bozhidar-visit-ielm)
+  (define-key emacs-lisp-mode-map (kbd "C-c C-z") #'my-visit-ielm)
   (define-key emacs-lisp-mode-map (kbd "C-c C-c") #'eval-defun)
   (define-key emacs-lisp-mode-map (kbd "C-c C-b") #'eval-buffer)
   (add-hook 'lisp-interaction-mode-hook #'eldoc-mode)
@@ -318,7 +318,7 @@ Start `ielm' if it's not already running."
 (require 'saveplace)
 (use-package saveplace
   :config
-  (setq save-place-file (expand-file-name "saveplace" bozhidar-savefile-dir))
+  (setq save-place-file (expand-file-name "saveplace" my-savefile-dir))
   ;; activate it for all buffers
   (setq-default save-place t))
 
@@ -330,12 +330,12 @@ Start `ielm' if it's not already running."
         ;; save every minute
         savehist-autosave-interval 60
         ;; keep the home clean
-        savehist-file (expand-file-name "savehist" bozhidar-savefile-dir))
+        savehist-file (expand-file-name "savehist" my-savefile-dir))
   (savehist-mode +1))
 
 (use-package recentf
   :config
-  (setq recentf-save-file (expand-file-name "recentf" bozhidar-savefile-dir)
+  (setq recentf-save-file (expand-file-name "recentf" my-savefile-dir)
         recentf-max-saved-items 500
         recentf-max-menu-items 15
         ;; disable recentf-cleanup on Emacs start, because it can cause
@@ -439,12 +439,10 @@ Start `ielm' if it's not already running."
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
-;; Config borrowed from prelude
-;; https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
+;; Config borrowed from prelude.
+;; See https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
 (use-package helm
   :ensure t
-  ;:diminish helm-mode
-  ;:pin melpa-stable
   :init (progn
           (require 'helm-config)
           (require 'helm-eshell)
@@ -562,21 +560,17 @@ Start `ielm' if it's not already running."
 (use-package crux
   :ensure t
   :bind (("C-c o" . crux-open-with)
-         ;("M-o" . crux-smart-open-line)
          ("C-c n" . crux-cleanup-buffer-or-region)
-         ;("C-c f" . crux-recentf-ido-find-file)
          ("C-M-z" . crux-indent-defun)
          ("C-c u" . crux-view-url)
          ("C-c e" . crux-eval-and-replace)
          ("C-c w" . crux-swap-windows)
          ("C-c D" . crux-delete-file-and-buffer)
-         ;("C-c r" . crux-rename-buffer-and-file)
          ("C-c t" . crux-visit-term-buffer)
          ("C-c k" . crux-kill-other-buffers)
          ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
          ("C-c I" . crux-find-user-init-file)
          ("C-c S" . crux-find-shell-init-file)
-         ;("s-r" . crux-recentf-ido-find-file)
          ("s-j" . crux-top-join-line)
          ("C-^" . crux-top-join-line)
          ("s-k" . crux-kill-whole-line)
@@ -617,7 +611,7 @@ Start `ielm' if it's not already running."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (helm-descbinds helm-ag helm-projectile helm clj-refactor powerline iedit gruvbox-theme buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-clojure imenu-anywhere hydra flycheck expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
+    (helm-descbinds helm-ag helm-projectile helm clj-refactor powerline iedit gruvbox-theme rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-clojure imenu-anywhere hydra flycheck expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
  '(safe-local-variable-values
    (quote
     ((checkdoc-package-keywords-flag)
