@@ -141,6 +141,10 @@
 
 ;; revert buffers automatically when underlying files are changed externally
 (global-auto-revert-mode t)
+(diminish 'auto-revert-mode)
+
+;; diminish eldoc mode
+(diminish 'eldoc-mode)
 
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -235,6 +239,12 @@ Start `ielm' if it's not already running."
   :config
   (load-theme 'gruvbox t))
 
+;; powerline (status line)
+(use-package powerline
+  :ensure t
+  :config
+  (powerline-default-theme))
+
 (use-package avy
   :ensure t
   :bind (("s-." . avy-goto-word-or-subword-1)
@@ -280,9 +290,6 @@ Start `ielm' if it's not already running."
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'eval-expression-minibuffer-setup-hook #'paredit-mode))
 
-;; mark and edit all copies of the marked region simultaneously.
-(use-package iedit
-  :ensure t)
 
 (use-package paren
   :config
@@ -291,7 +298,8 @@ Start `ielm' if it's not already running."
 (use-package abbrev
   :config
   (setq save-abbrevs 'silently)
-  (setq-default abbrev-mode t))
+  ;(setq-default abbrev-mode t)
+  )
 
 (use-package uniquify
   :config
@@ -488,12 +496,21 @@ Start `ielm' if it's not already running."
   :bind (("C-c i" . imenu-anywhere)
          ("s-i" . imenu-anywhere)))
 
-;; (use-package flyspell
-;;   :config
-;;   (setq ispell-program-name "aspell" ; use aspell instead of ispell
-;;         ispell-extra-args '("--sug-mode=ultra"))
-;;   (add-hook 'text-mode-hook #'flyspell-mode)
-;;   (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+(use-package flyspell
+  :config
+  (setq ispell-program-name "aspell" ; use aspell instead of ispell
+        ispell-extra-args '("--sug-mode=ultra"))
+  (add-hook 'text-mode-hook #'flyspell-mode)
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode))
+
+;; Mark and edit all copies of the marked region simultaneously.
+;; Note: flyspell and iedit both register the key-bind C-;
+;; We want to use the iedit keybinding.
+(use-package iedit
+  :ensure t
+  :bind (:map prog-mode-map
+              ("C-;" . iedit-mode)))
+
 
 (use-package flycheck
   :ensure t
@@ -502,6 +519,7 @@ Start `ielm' if it's not already running."
 
 (use-package super-save
   :ensure t
+  :diminish super-save-mode
   :config
   (super-save-mode +1))
 
@@ -532,7 +550,8 @@ Start `ielm' if it's not already running."
          ([(shift return)] . crux-smart-open-line)
          ([(control shift return)] . crux-smart-open-line-above)
          ([remap kill-whole-line] . crux-kill-whole-line)
-         ("C-c s" . crux-ispell-word-then-abbrev)))
+         ;("C-c s" . crux-ispell-word-then-abbrev)
+         ))
 
 (use-package diff-hl
   :ensure t
@@ -543,6 +562,7 @@ Start `ielm' if it's not already running."
 
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config
   (which-key-mode +1))
 
@@ -561,7 +581,7 @@ Start `ielm' if it's not already running."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (ido-vertical-mode iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
+    (powerline ido-vertical-mode iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
  '(safe-local-variable-values
    (quote
     ((checkdoc-package-keywords-flag)
