@@ -254,7 +254,11 @@ Start `ielm' if it's not already running."
 
 (use-package magit
   :ensure t
-  :bind (("C-x g" . magit-status)))
+  :config
+  (bind-key "C-x g" '(lambda ()
+                       (interactive)
+                       (save-buffer)
+                       (magit-status))))
 
 (use-package ag
   :ensure t)
@@ -515,6 +519,7 @@ Start `ielm' if it's not already running."
 
 (use-package flyspell
   :config
+  (bind-key "C-;" nil flyspell-mode-map)
   (setq ispell-program-name "aspell" ; use aspell instead of ispell
         ispell-extra-args '("--sug-mode=ultra"))
   (add-hook 'text-mode-hook #'flyspell-mode)
@@ -524,10 +529,7 @@ Start `ielm' if it's not already running."
 ;; Note: flyspell and iedit both register the key-bind C-;
 ;; We want to use the iedit keybinding.
 (use-package iedit
-  :ensure t
-  :bind (:map prog-mode-map
-              ("C-;" . iedit-mode)))
-
+  :ensure t)
 
 (use-package flycheck
   :ensure t
