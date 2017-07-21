@@ -439,66 +439,83 @@ Start `ielm' if it's not already running."
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode))
 
-(use-package ido
+;; Config borrowed from prelude
+;; https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
+(use-package helm
   :ensure t
-  :bind ("M-o" . ido-switch-buffer)
-  :config
-  (setq ido-enable-prefix nil
-        ido-enable-flex-matching t
-        ido-create-new-buffer 'always
-        ido-use-filename-at-point 'guess
-        ido-max-prospects 10
-        ido-save-directory-list-file (expand-file-name "ido.hist" bozhidar-savefile-dir)
-        ido-default-file-method 'selected-window
-        ido-auto-merge-work-directories-length -1)
-  (ido-mode 1)
-  (ido-everywhere 1))
+  ;:diminish helm-mode
+  ;:pin melpa-stable
+  :init (progn
+          (require 'helm-config)
+          (require 'helm-eshell)
 
-(use-package ido-vertical-mode
-  :ensure t
-  :config
-  (setq ido-vertical-define-keys 'C-n-C-p-up-and-down)
-  (setq ido-use-faces t)
-  (set-face-attribute 'ido-vertical-first-match-face nil
-                      :background nil
-                      :foreground "orange")
-  (set-face-attribute 'ido-vertical-only-match-face nil
-                      :background nil
-                      :foreground nil)
-  (set-face-attribute 'ido-vertical-match-face nil
-                      :foreground nil)
-  (ido-vertical-mode 1))
+          (use-package helm-projectile
+            :ensure t
+            :commands helm-projectile
+            :bind ("C-c p h" . helm-projectile))
 
-(use-package ido-yes-or-no
-  :ensure t
-  :config
-  (ido-yes-or-no-mode 1))
+          (setq projectile-completion-system 'helm)
 
-(use-package ido-completing-read+
-  :ensure t
-  :config
-  (ido-ubiquitous-mode 1))
+          (use-package helm-ag
+            :defer 10
+            :ensure t)
 
-(use-package flx-ido
-  :ensure t
-  :config
-  (flx-ido-mode +1)
-  ;; disable ido faces to see flx highlights
-  (setq ido-use-faces nil))
+          (use-package helm-descbinds
+            :ensure t)
 
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex)
-         ("M-X" . smex-major-mode-commands)
-         ("C-c C-c M-x" . execute-extend-command)))
+          (when (executable-find "curl")
+            (setq helm-google-suggest-use-curl-p t))
+
+          ;; See https://github.com/bbatsov/prelude/pull/670 for a detailed
+          ;; discussion of these options.
+          (setq helm-split-window-in-side-p           t
+                helm-buffers-fuzzy-matching           t
+                helm-move-to-line-cycle-in-source     t
+                helm-ff-search-library-in-sexp        t
+                helm-ff-file-name-history-use-recentf t)
+
+          ;; The default "C-x c" is quite close to "C-x C-c", which quits Emacs.
+          ;; Changed to "C-c h". Note: We must set "C-c h" globally, because we
+          ;; cannot change `helm-command-prefix-key' once `helm-config' is loaded.
+          (global-unset-key (kbd "C-x c"))
+
+          ;; use helm to list eshell history
+          (add-hook 'eshell-mode-hook
+                    #'(lambda ()
+                        (substitute-key-definition 'eshell-list-history 'helm-eshell-history eshell-mode-map)))
+
+          (substitute-key-definition 'find-tag 'helm-etags-select global-map)
+
+          ;; enable modes
+          (helm-descbinds-mode)
+          (helm-mode 1)
+          (helm-projectile-on))
+
+  :bind (("C-c h" . helm-command-prefix)
+         ("C-x b" . helm-buffers-list)
+         ("M-o" . helm-recentf)
+         ("C-`" . helm-resume)
+         ("M-x" . helm-M-x)
+         ("M-y" . helm-show-kill-ring)
+         ("C-x C-f" . helm-find-files)
+         ("C-h f" . helm-apropos)
+         ("C-h r" . helm-info-emacs)
+         :map helm-command-map
+         ("o" . helm-occur)
+         ("g" . helm-do-grep)
+         ("C-c w" . helm-wikipedia-suggest)
+         ("SPC" . helm-all-mark-rings)
+         :map isearch-mode-map
+         ("C-o" . helm-occur-from-isearch)
+         :map minibuffer-local-map
+         ("C-c C-l" . helm-minibuffer-history)
+         :map shell-mode-map
+         ("C-c C-l" . helm-comint-input-ring)))
 
 (use-package markdown-mode
   :ensure t)
 
 (use-package yaml-mode
-  :ensure t)
-
-(use-package cask-mode
   :ensure t)
 
 (use-package company
@@ -547,7 +564,7 @@ Start `ielm' if it's not already running."
   :bind (("C-c o" . crux-open-with)
          ;("M-o" . crux-smart-open-line)
          ("C-c n" . crux-cleanup-buffer-or-region)
-         ("C-c f" . crux-recentf-ido-find-file)
+         ;("C-c f" . crux-recentf-ido-find-file)
          ("C-M-z" . crux-indent-defun)
          ("C-c u" . crux-view-url)
          ("C-c e" . crux-eval-and-replace)
@@ -559,7 +576,7 @@ Start `ielm' if it's not already running."
          ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
          ("C-c I" . crux-find-user-init-file)
          ("C-c S" . crux-find-shell-init-file)
-         ("s-r" . crux-recentf-ido-find-file)
+         ;("s-r" . crux-recentf-ido-find-file)
          ("s-j" . crux-top-join-line)
          ("C-^" . crux-top-join-line)
          ("s-k" . crux-kill-whole-line)
@@ -600,7 +617,7 @@ Start `ielm' if it's not already running."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (clj-refactor powerline ido-vertical-mode iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
+    (helm-descbinds helm-ag helm-projectile helm clj-refactor powerline iedit gruvbox-theme buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-clojure imenu-anywhere hydra flycheck expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
  '(safe-local-variable-values
    (quote
     ((checkdoc-package-keywords-flag)
