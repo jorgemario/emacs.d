@@ -553,7 +553,7 @@ Start `ielm' if it's not already running."
          ("C-c e" . crux-eval-and-replace)
          ("C-c w" . crux-swap-windows)
          ("C-c D" . crux-delete-file-and-buffer)
-         ("C-c r" . crux-rename-buffer-and-file)
+         ;("C-c r" . crux-rename-buffer-and-file)
          ("C-c t" . crux-visit-term-buffer)
          ("C-c k" . crux-kill-other-buffers)
          ("C-c TAB" . crux-indent-rigidly-and-copy-to-clipboard)
