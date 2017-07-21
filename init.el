@@ -409,10 +409,27 @@ Start `ielm' if it's not already running."
   (add-hook 'clojure-mode-hook #'subword-mode)
   (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
 
+(use-package clj-refactor
+  :ensure t
+  :bind ("<s-return>" . cljr-add-missing-libspec)
+  :config
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (clj-refactor-mode 1)
+              (yas-minor-mode 1) ; for adding require/use/import statements
+              ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+              (cljr-add-keybindings-with-prefix "C-c r"))))
+
 (use-package cider
   :ensure t
-  :config
   :pin melpa-stable
+  :config
+  (bind-key "C-c C-k"
+            '(lambda ()
+               (interactive)
+               (save-buffer)
+               (cider-load-buffer))
+            cider-mode-map)
   (add-hook 'cider-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'eldoc-mode)
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
@@ -581,7 +598,7 @@ Start `ielm' if it's not already running."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (powerline ido-vertical-mode iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
+    (clj-refactor powerline ido-vertical-mode iedit ido-yes-or-no gruvbox-theme cask-mode buttercup rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save smex rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-ruby inf-clojure imenu-anywhere hydra flycheck flx-ido expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
  '(safe-local-variable-values
    (quote
     ((checkdoc-package-keywords-flag)
