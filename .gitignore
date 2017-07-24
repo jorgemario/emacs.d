@@ -17,6 +17,7 @@ smex-items
 network-security.data
 savefile/
 projectile-bookmarks.eld
+projectile.cache
 session*
 .cask
 tramp
