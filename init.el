@@ -55,7 +55,6 @@
 (message "Loading core modules...")
 
 (require 'simo-core)
-;(require 'simo-defaults)
 (require 'simo-magit)
 (require 'simo-org)
 (require 'simo-programming)
@@ -64,29 +63,5 @@
 (when (eq system-type 'darwin)
   (message "Loading osx configuration file...")
   (require 'simo-osx))
-
-;; (custom-set-variables
-;;  ;; custom-set-variables was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(package-selected-packages
-;;    (quote
-;;     (helm-descbinds helm-ag helm-projectile helm clj-refactor powerline iedit gruvbox-theme rainbow-mode ztree zop-to-char yasnippet yaml-mode which-key use-package super-save rainbow-delimiters pt projectile paredit noflet multiple-cursors move-text markdown-mode magit inflections inf-clojure imenu-anywhere hydra flycheck expand-region exec-path-from-shell evil elisp-slime-nav edn easy-kill crux company cider avy anzu aggressive-indent ag)))
-;;  '(safe-local-variable-values
-;;    (quote
-;;     ((checkdoc-package-keywords-flag)
-;;      (eval when
-;;            (require
-;;             (quote rainbow-mode)
-;;             nil t)
-;;            (rainbow-mode 1))
-;;      (bug-reference-bug-regexp . "#\\(?2:[[:digit:]]+\\)")))))
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(default ((((class color) (min-colors 16777215)) (:background "#282828" :foreground "#fdf4c1")) (((class color) (min-colors 255)) (:background "#262626" :foreground "#ffffaf")))))
 
 ;;; init.el ends here

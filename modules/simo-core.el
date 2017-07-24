@@ -7,7 +7,6 @@
 
 (require 'use-package)
 (require 'diminish)
-(require 'saveplace)
 
 ;; warn when opening files bigger than 100MB
 (setq large-file-warning-threshold 100000000)
@@ -218,7 +217,6 @@
   (setq uniquify-ignore-buffers-re "^\\*"))
 
 ;; saveplace remembers your location in a file when saving files
-
 (use-package saveplace
   :config
   (setq save-place-file (expand-file-name "saveplace" simo-savefile-dir))
@@ -283,8 +281,6 @@
   (([(meta shift up)] . move-text-up)
    ([(meta shift down)] . move-text-down)))
 
-
-
 (use-package whitespace
   :init
   (dolist (hook '(prog-mode-hook text-mode-hook))
@@ -293,8 +289,6 @@
   :config
   (setq whitespace-line-column 80) ;; limit line length
   (setq whitespace-style '(face tabs empty trailing lines-tail)))
-
-
 
 ;; Config borrowed from prelude.
 ;; See https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
@@ -369,7 +363,8 @@
          ("C-c C-l" . helm-comint-input-ring)))
 
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 
 (use-package yaml-mode
   :ensure t)
@@ -377,6 +372,7 @@
 (use-package company
   :ensure t
   :diminish company-mode
+  :defer t
   :config
   (global-company-mode))
 
