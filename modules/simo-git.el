@@ -14,6 +14,6 @@
                        (save-buffer)
                        (magit-status))))
 
-(provide 'simo-magit)
+(provide 'simo-git)
 
 ;;; simo-magit.el ends here

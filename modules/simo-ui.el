@@ -12,8 +12,8 @@
 (set-frame-font "Hack 14" nil t)
 
 ;; see https://unix.stackexchange.com/questions/29786/font-size-issues-with-emacs-in-linum-mode/30087#30087
-(eval-after-load "linum"
-  '(set-face-attribute 'linum nil :height 130))
+;; (eval-after-load "linum"
+;;   '(set-face-attribute 'linum nil :height 120))
 
 (use-package gruvbox-theme
   :ensure t
@@ -25,6 +25,9 @@
   :ensure t
   :config
   (powerline-default-theme))
+
+(use-package all-the-icons
+  :ensure t)
 
 (provide 'simo-ui)
 

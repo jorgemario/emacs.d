@@ -128,6 +128,13 @@
 (global-set-key (kbd "s-q") #'fill-paragraph)
 (global-set-key (kbd "s-x") #'execute-extended-command)
 
+;; easy keys to split window. Key based on ErgoEmacs keybinding
+;; see http://ergoemacs.org/emacs/effective_emacs.html
+(global-set-key (kbd "M-2") 'delete-window) ; close current pane
+(global-set-key (kbd "M-3") 'delete-other-windows) ; expand current pane
+(global-set-key (kbd "M-4") 'split-window-below) ; split pane top/bottom
+(global-set-key (kbd "M-5") 'split-window-right) ; split pane top/bottom
+
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
 
