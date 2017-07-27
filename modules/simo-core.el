@@ -144,9 +144,6 @@
 ;; delete extra spaces
 (setq backward-delete-char-untabify-method 'hungry)
 
-;; Show line numbers
-;;(global-linum-mode)
-
 ;; toggle line numbers
 (global-set-key (kbd "C-x l") #'linum-mode)
 
@@ -298,13 +295,21 @@
    ([(meta shift down)] . move-text-down)))
 
 (use-package whitespace
-  :init
-  (dolist (hook '(prog-mode-hook text-mode-hook))
-    (add-hook hook #'whitespace-mode))
-  (add-hook 'before-save-hook #'whitespace-cleanup)
+  ;; :init
+  ;; (dolist (hook '(prog-mode-hook text-mode-hook))
+  ;;   (add-hook hook #'whitespace-mode))
+  ;; (add-hook 'before-save-hook #'whitespace-cleanup)
+  :diminish whitespace-mode
+  :bind ("C-x w" . whitespace-mode)
   :config
   (setq whitespace-line-column 100) ;; limit line length
-  (setq whitespace-style '(face tabs empty trailing lines-tail)))
+  (setq whitespace-display-mappings
+        ;; all numbers are unicode codepoint in decimal. e.g. (insert-char 182 1)
+        '((space-mark 32 [183] [46]) ; SPACE 32 「 」, 183 MIDDLE DOT 「·」, 46 FULL STOP 「.」
+          (newline-mark 10 [182 10]) ; LINE FEED,
+          (tab-mark 9 [9655 9] [92 9]) ; tab
+          ))
+  (setq whitespace-style '(tabs empty trailing newline newline-mark)))
 
 ;; Config borrowed from prelude.
 ;; See https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
