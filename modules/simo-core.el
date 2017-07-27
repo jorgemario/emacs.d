@@ -350,7 +350,7 @@
 
   :bind (("C-c h" . helm-command-prefix)
          ("C-x b" . helm-buffers-list)
-         ("M-o" . helm-recentf)
+         ("M-o" . helm-buffer-list)
          ("C-`" . helm-resume)
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
@@ -379,9 +379,9 @@
 (use-package company
   :ensure t
   :diminish company-mode
-  :defer t
   :config
-  (global-company-mode))
+  (global-company-mode)
+  :bind (("s-<tab>" . company-complete)))
 
 (use-package zop-to-char
   :ensure t
