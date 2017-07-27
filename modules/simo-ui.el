@@ -27,10 +27,10 @@
 
 (advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
 
-(use-package gruvbox-theme
+(use-package zenburn-theme
   :ensure t
   :config
-  (load-theme 'gruvbox t))
+  (load-theme 'zenburn t))
 
 ;; powerline (status line)
 (use-package powerline
