@@ -109,6 +109,16 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
 
+;; common-lisp/quicklisp with sbcl
+(defvar quicklisp-helper-src "~/quicklisp/slime-helper.el")
+
+(when (file-exists-p quicklisp-helper-src)
+  (message "Loading quicklisp helper...")
+  (load (expand-file-name quicklisp-helper-src))
+
+  ;; Replace "sbcl" with the path to your implementation
+  (setq inferior-lisp-program "/usr/local/bin/sbcl"))
+
 (provide 'simo-programming)
 
 ;;; simo-programming.el ends here
