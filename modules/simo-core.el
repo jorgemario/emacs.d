@@ -145,8 +145,10 @@
 (setq backward-delete-char-untabify-method 'hungry)
 
 ;; Show line numbers
-(global-linum-mode)
+;;(global-linum-mode)
 
+;; toggle line numbers
+(global-set-key (kbd "C-x l") #'linum-mode)
 
 ;; Narrow and widen region (toogle)
 ;; see TODO: Endless parenthesis link

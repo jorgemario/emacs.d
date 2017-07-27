@@ -10,7 +10,8 @@
 ;; trust all themes
 (setq custom-safe-themes t)
 
-(set-frame-font "Hack 14" nil t)
+;; linum 4 char width
+(setq linum-format "%4d ")
 
 ;; fix line number scaling
 ;; see https://unix.stackexchange.com/questions/29786/font-size-issues-with-emacs-in-linum-mode/30087#30087
@@ -23,6 +24,7 @@
               (if (car (window-margins))
                   (car (window-margins)) 1)
               ))))
+
 (advice-add #'linum-update-window :after #'linum-update-window-scale-fix)
 
 (use-package gruvbox-theme
@@ -36,8 +38,6 @@
   :config
   (powerline-default-theme))
 
-(use-package all-the-icons
-  :ensure t)
 
 (provide 'simo-ui)
 

@@ -7,7 +7,6 @@
 (require 'use-package)
 (require 'diminish)
 
-
 ;; diminish eldoc mode
 (diminish 'eldoc-mode)
 
