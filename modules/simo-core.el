@@ -264,6 +264,13 @@
   ;; enable some really cool extensions like C-x C-j(dired-jump)
   (require 'dired-x))
 
+(use-package dired-k
+  :ensure t
+  :config
+  (setq dired-k-style 'k.sh)
+  (add-hook 'dired-initial-position-hook 'dired-k)
+  (add-hook 'dired-after-readin-hook #'dired-k-no-revert))
+
 (use-package anzu
   :ensure t
   :bind (("M-%" . anzu-query-replace)
@@ -350,7 +357,7 @@
 
   :bind (("C-c h" . helm-command-prefix)
          ("C-x b" . helm-buffers-list)
-         ("M-o" . helm-buffer-list)
+         ("M-o" . helm-buffers-list)
          ("C-`" . helm-resume)
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
