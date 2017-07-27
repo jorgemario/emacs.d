@@ -62,12 +62,25 @@
   :config
   (add-hook 'prog-mode-hook #'rainbow-mode))
 
+;; a little more syntax highlighting
+(use-package clojure-mode-extra-font-locking
+  :ensure t)
+
 (use-package clojure-mode
   :ensure t
   :config
   (add-hook 'clojure-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'subword-mode)
-  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode))
+  (add-hook 'clojure-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'clojure-mode-hook (lambda ()
+                                 (font-lock-add-keywords
+                                  nil
+                                  '(("(\\(facts?\\)"
+                                     (1 font-lock-keyword-face))
+                                    ("(\\(background?\\)"
+                                     (1 font-lock-keyword-face))))
+                                 (define-clojure-indent (fact 1))
+                                 (define-clojure-indent (facts 1)))))
 
 (use-package clj-refactor
   :ensure t
