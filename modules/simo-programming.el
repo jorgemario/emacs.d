@@ -40,7 +40,11 @@
 (use-package paredit
   :ensure t
   :diminish paredit-mode
-  :bind ("M-k" . paredit-raise-sexp)
+  :bind (("M-k" . paredit-raise-sexp)
+         :map paredit-mode-map
+         ("M-(" . paredit-wrap-round)
+         ("M-[" . paredit-wrap-square)
+         ("M-{" . paredit-wrap-curly))
   :config
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   ;; enable in the *scratch* buffer
