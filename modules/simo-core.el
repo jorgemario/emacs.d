@@ -106,8 +106,9 @@
 (global-set-key (kbd "M-/") #'hippie-expand)
 (global-set-key (kbd "s-/") #'hippie-expand)
 
-(global-set-key (kbd "C-c <right>") #'next-buffer)
-(global-set-key (kbd "C-c <left>") #'previous-buffer)
+;; winner mode
+(when (fboundp 'winner-mode)
+      (winner-mode 1))
 
 ;; replace buffer-menu with ibuffer
 (global-set-key (kbd "C-x C-b") #'ibuffer)
