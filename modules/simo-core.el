@@ -241,12 +241,13 @@
         savehist-file (expand-file-name "savehist" simo-savefile-dir))
   (savehist-mode +1))
 
-
-
 (use-package windmove
   :config
   ;; use shift + arrow keys to switch between visible buffers
   (windmove-default-keybindings))
+
+(use-package hiwin
+  :ensure t)
 
 (use-package dired
   :config
