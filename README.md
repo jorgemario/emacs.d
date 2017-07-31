@@ -1,5 +1,5 @@
 ## Personal Emacs config
-* Initially a for of Bozhidar's config
+* Initially a fork of Bozhidar's config
 * Eventually moved to a mudularized config (ala prelude)
 * Removed ruby/elixir support
 * Added iedit, clj-refactor, powerline, helm, etc
