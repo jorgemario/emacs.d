@@ -113,6 +113,9 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
 
+(use-package flycheck-joker
+  :ensure t)
+
 ;; common-lisp/quicklisp with sbcl
 (defvar quicklisp-helper-src "~/quicklisp/slime-helper.el")
 
