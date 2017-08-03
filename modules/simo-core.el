@@ -136,6 +136,9 @@
 (global-set-key (kbd "M-4") 'split-window-below) ; split pane top/bottom
 (global-set-key (kbd "M-5") 'split-window-right) ; split pane top/bottom
 
+;; other frame
+(global-set-key (kbd "M-`") 'other-frame)
+
 ;; smart tab behavior - indent or complete
 (setq tab-always-indent 'complete)
 
@@ -147,6 +150,14 @@
 
 ;; toggle line numbers
 (global-set-key (kbd "C-x l") #'linum-mode)
+
+;; kill region do nothing if no region
+(defun my-kill-region ()
+  (interactive)
+  (if (region-active-p)
+      (call-interactively #'kill-region)))
+
+(global-set-key (kbd "C-w") #'my-kill-region)
 
 ;; Narrow and widen region (toogle)
 ;; see TODO: Endless parenthesis link
@@ -480,6 +491,11 @@
   (setq undo-tree-history-directory-alist
         `((".*" . ,temporary-file-directory)))
   (setq undo-tree-auto-save-history t))
+
+(use-package beginend
+  :ensure t
+  :config
+  (beginend-dired-mode))
 
 (provide 'simo-core)
 

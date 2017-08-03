@@ -16,7 +16,7 @@
 ;; fix line number scaling
 ;; see https://unix.stackexchange.com/questions/29786/font-size-issues-with-emacs-in-linum-mode/30087#30087
 (defun linum-update-window-scale-fix (win)
-  "fix linum for scaled text"
+  "Fix linum for scaled text."
   (set-window-margins win
           (ceiling (* (if (boundp 'text-scale-mode-step)
                   (expt text-scale-mode-step
@@ -36,8 +36,7 @@
 (use-package powerline
   :ensure t
   :config
-  (powerline-default-theme))
-
+  (powerline-vim-theme))
 
 (provide 'simo-ui)
 
