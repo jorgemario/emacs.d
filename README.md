@@ -1,6 +1,6 @@
-## Fork of Bozhidar's Emacs config
-Added personal preferences on top of original config.
-* Different theme and font
+## Personal Emacs config
+* Initially a fork of Bozhidar's config
+* Eventually moved to a mudularized config (ala prelude)
 * Removed ruby/elixir support
 * Added iedit, clj-refactor, powerline, helm, etc
 * Added/changed some keybindings
