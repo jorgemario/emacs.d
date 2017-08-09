@@ -269,6 +269,10 @@
   (setq dired-recursive-deletes 'always)
   (setq dired-recursive-copies 'always)
 
+  ;; Auto refresh dired, but be quiet about it
+  (setq global-auto-revert-non-file-buffers t)
+  (setq auto-revert-verbose nil)
+
   ;; if there is a dired buffer displayed in the next window, use its
   ;; current subdir, instead of the current subdir of this dired buffer
   (setq dired-dwim-target t)
@@ -495,7 +499,7 @@
 (use-package beginend
   :ensure t
   :config
-  (beginend-dired-mode))
+  (add-hook 'dired-mode-hook 'beginend-dired-mode))
 
 (provide 'simo-core)
 

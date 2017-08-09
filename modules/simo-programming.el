@@ -113,6 +113,8 @@
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
 
+;; Requires joker https://github.com/candid82/joker#installation
+;; Make sure to create provider the .joker file to avoid  false positives. ln -s ~/.emacs.d/.joker ~/.joker
 (use-package flycheck-joker
   :ensure t)
 
