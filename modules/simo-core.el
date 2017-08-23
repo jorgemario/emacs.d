@@ -527,6 +527,7 @@
 
 ;; god mode
 (defun simo/update-cursor ()
+  "Function to toggle the cursor type."
   (setq cursor-type (if (or god-local-mode buffer-read-only)
                         'box
                       'bar)))
@@ -538,6 +539,8 @@
   :ensure t
   ;:disabled t
   :bind ("<escape>" . god-mode-all)
+  :init
+  (god-mode)
   :config
   (global-set-key (kbd "<escape>") 'god-mode-all)
   (define-key god-local-mode-map (kbd ".") 'repeat)

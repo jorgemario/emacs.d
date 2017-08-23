@@ -47,11 +47,22 @@
 
 (use-package spaceline
   :ensure t
+  :disabled t
   :config
   (progn
     (require 'spaceline-config)
     (spaceline-spacemacs-theme)
     (setq powerline-height 20)))
+
+(use-package smart-mode-line
+  :ensure t
+  :init
+  (sml/setup)
+  :config
+  (setq sml/shorten-directory t
+        sml/shorten-modes t)
+  (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d/" ":E:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/dev/beluca/" ":IMS:")))
 
 (provide 'simo-ui)
 
