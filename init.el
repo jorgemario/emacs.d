@@ -72,10 +72,10 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (flycheck-joker beginend hiwin web-mode clojure-mode-extra-font-locking monokai-theme zenburn-theme dired-k zop-to-char yaml-mode which-key use-package undo-tree super-save rainbow-mode rainbow-delimiters pt powerline move-text markdown-mode magit imenu-anywhere iedit helm-projectile helm-descbinds helm-ag flycheck expand-region exec-path-from-shell elisp-slime-nav easy-kill diff-hl crux company clj-refactor avy anzu ag))))
+    (god-mode ace-window ace-jump flycheck-joker beginend hiwin web-mode clojure-mode-extra-font-locking monokai-theme zenburn-theme zop-to-char yaml-mode which-key use-package undo-tree super-save rainbow-mode rainbow-delimiters pt move-text markdown-mode magit imenu-anywhere iedit helm-projectile helm-descbinds helm-ag flycheck expand-region exec-path-from-shell elisp-slime-nav easy-kill diff-hl crux company clj-refactor avy anzu ag))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(flycheck-error-list-warning ((t (:inherit warning)))))

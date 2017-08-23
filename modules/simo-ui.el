@@ -33,10 +33,25 @@
   (load-theme 'zenburn t))
 
 ;; powerline (status line)
-(use-package powerline
+;; (use-package powerline
+;;   :ensure t
+;;   :config
+;;   (powerline-vim-theme))
+
+;; (use-package flycheck-color-mode-line
+;;   :ensure t
+;;   :config
+;;   (add-hook 'flycheck-mode-hook 'flycheck-color-mode-line-mode)
+;;   '(flycheck-color-mode-line-error-face ((t (:inherit flycheck-fringe-error :background "#F07667" :foreground "#EFEFEF" :weight normal))))
+;;   '(flycheck-color-mode-line-warning-face ((t (:inherit flycheck-fringe-warning :background "#DDA0DD" :foreground "#efefef" :weight normal)))))
+
+(use-package spaceline
   :ensure t
   :config
-  (powerline-vim-theme))
+  (progn
+    (require 'spaceline-config)
+    (spaceline-spacemacs-theme)
+    (setq powerline-height 20)))
 
 (provide 'simo-ui)
 

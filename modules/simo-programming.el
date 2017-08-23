@@ -44,7 +44,9 @@
          :map paredit-mode-map
          ("M-(" . paredit-wrap-round)
          ("M-[" . paredit-wrap-square)
-         ("M-{" . paredit-wrap-curly))
+         ("M-{" . paredit-wrap-curly)
+         ("<DEL>" . paredit-forward-delete)
+         ("<backspace>" . paredit-backward-delete))
   :config
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   ;; enable in the *scratch* buffer
@@ -112,6 +114,18 @@
   (add-hook 'cider-repl-mode-hook #'paredit-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))"))
+
+(use-package company
+  :ensure t
+  :diminish company-mode
+  :init
+  (add-hook 'prog-mode-hook 'company-mode)
+  :config
+  (setq company-idle-delay 0.5)
+  (setq company-tooltip-limit 10)
+  (setq company-minimum-prefix-length 2)
+  (setq company-tooltip-flip-when-above t)
+  :bind (("s-<tab>" . company-complete)))
 
 ;; Requires joker https://github.com/candid82/joker#installation
 ;; Make sure to create provider the .joker file to avoid  false positives. ln -s ~/.emacs.d/.joker ~/.joker

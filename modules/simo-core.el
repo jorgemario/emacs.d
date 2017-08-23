@@ -151,13 +151,13 @@
 ;; toggle line numbers
 (global-set-key (kbd "C-x l") #'linum-mode)
 
-;; kill region do nothing if no region
-(defun my-kill-region ()
+(defun simo/kill-region ()
+  "Kill region do nothing if no region."
   (interactive)
   (if (region-active-p)
       (call-interactively #'kill-region)))
 
-(global-set-key (kbd "C-w") #'my-kill-region)
+(global-set-key (kbd "C-w") #'simo/kill-region)
 
 ;; Narrow and widen region (toogle)
 ;; see TODO: Endless parenthesis link
@@ -210,7 +210,21 @@
   :ensure t
   :bind ("s-p" . projectile-command-map)
   :config
-  (projectile-global-mode +1))
+  (setq projectile-globally-ignored-files
+        (append '(".pyc"
+                  ".class"
+                  "~")
+                projectile-globally-ignored-files))
+  (setq projectile-globally-ignored-directories
+        (append '("node_modules"
+                  "classes"
+                  "figwheel_temp"
+                  "js/compiled"
+                  ".cljs_rhino_repl"
+                  ".idea"
+                  "cljsbuild")
+                projectile-globally-ignored-directories))
+  (projectile-mode))
 
 (use-package pt
   :ensure t)
@@ -280,12 +294,12 @@
   ;; enable some really cool extensions like C-x C-j(dired-jump)
   (require 'dired-x))
 
-(use-package dired-k
-  :ensure t
-  :config
-  (setq dired-k-style 'k.sh)
-  (add-hook 'dired-initial-position-hook 'dired-k)
-  (add-hook 'dired-after-readin-hook #'dired-k-no-revert))
+;; (use-package dired-k
+;;   :ensure t
+;;   :config
+;;   (setq dired-k-style 'k.sh)
+;;   (add-hook 'dired-initial-position-hook 'dired-k)
+;;   (add-hook 'dired-after-readin-hook #'dired-k-no-revert))
 
 (use-package anzu
   :ensure t
@@ -327,6 +341,13 @@
           (tab-mark 9 [9655 9] [92 9]) ; tab
           ))
   (setq whitespace-style '(tabs empty trailing newline newline-mark)))
+
+(defun simo/recentf ()
+  "Invoke the appropriate recentf action."
+  (interactive)
+  (if (projectile-project-p)
+      (call-interactively 'helm-projectile-recentf)
+    (call-interactively 'helm-recentf)))
 
 ;; Config borrowed from prelude.
 ;; See https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
@@ -381,7 +402,8 @@
 
   :bind (("C-c h" . helm-command-prefix)
          ("C-x b" . helm-buffers-list)
-         ("M-o" . helm-buffers-list)
+         ("M-p" . helm-projectile)
+         ("M-o" . simo/recentf)
          ("C-`" . helm-resume)
          ("M-x" . helm-M-x)
          ("M-y" . helm-show-kill-ring)
@@ -407,12 +429,7 @@
 (use-package yaml-mode
   :ensure t)
 
-(use-package company
-  :ensure t
-  :diminish company-mode
-  :config
-  (global-company-mode)
-  :bind (("s-<tab>" . company-complete)))
+
 
 (use-package zop-to-char
   :ensure t
@@ -499,7 +516,92 @@
 (use-package beginend
   :ensure t
   :config
-  (add-hook 'dired-mode-hook 'beginend-dired-mode))
+  (add-hook 'dired-load-hook 'beginend-dired-mode))
+
+(use-package ace-window
+  :ensure t
+  :bind (("C-x o" . ace-window)))
+
+;; cursor start as bar (box used to indicate god mode)
+(setq cursor-type 'bar)
+
+;; god mode
+(defun simo/update-cursor ()
+  (setq cursor-type (if (or god-local-mode buffer-read-only)
+                        'box
+                      'bar)))
+
+(add-hook 'god-mode-enabled-hook 'simo/update-cursor)
+(add-hook 'god-mode-disabled-hook 'simo/update-cursor)
+
+(use-package god-mode
+  :ensure t
+  ;:disabled t
+  :bind ("<escape>" . god-mode-all)
+  :config
+  (global-set-key (kbd "<escape>") 'god-mode-all)
+  (define-key god-local-mode-map (kbd ".") 'repeat)
+  (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+  (defun god-update-cursor ()
+    "Update my cursor."
+    (setq cursor-type
+          (if god-local-mode
+              'box
+            'bar)))
+  ;;(add-hook 'god-mode-enabled-hook 'god-update-cursor)
+  ;;(add-hook 'god-mode-disabled-hook 'god-update-cursor)
+  (add-to-list 'god-exempt-major-modes 'sauron-mode)
+  (add-to-list 'god-exempt-major-modes 'eshell-mode)
+  (add-to-list 'god-exempt-major-modes 'org-agenda-mode)
+  (add-to-list 'god-exempt-major-modes 'mingus-playlist-mode)
+  (add-to-list 'god-exempt-major-modes 'mingus-browse-mode)
+  (add-to-list 'god-exempt-major-modes 'twittering-mode)
+  (add-to-list 'god-exempt-major-modes 'Man-mode)
+  (add-to-list 'god-exempt-major-modes 'proced-mode)
+  (add-to-list 'god-exempt-major-modes 'gnus-summary-mode)
+  (add-to-list 'god-exempt-major-modes 'gnus-article-mode)
+  (add-to-list 'god-exempt-major-modes 'gnus-group-mode)
+  (add-to-list 'god-exempt-major-modes 'elfeed-search-mode)
+  (add-to-list 'god-exempt-major-modes 'haskell-interactive-mode)
+  (add-to-list 'god-exempt-major-modes 'epresent-mode)
+  (add-to-list 'god-exempt-major-modes 'compilation-mode)
+  (add-to-list 'god-exempt-major-modes 'Custom-mode)
+  ;; Finally, a fix for key-translation-map by redefining the
+  ;; `key-string-after-consuming-key' method, courtesy of
+  ;; https://github.com/chrisdone/god-mode/issues/75
+  (defun key-string-after-consuming-key (key key-string-so-far)
+    "Interpret god-mode special keys for key (consumes more keys
+if appropriate). Append to keysequence."
+    (let ((key-consumed t) next-modifier next-key)
+      (message key-string-so-far)
+      (setq next-modifier
+            (cond
+             ((string= key god-literal-key)
+              (setq god-literal-sequence t)
+              "")
+             (god-literal-sequence
+              (setq key-consumed nil)
+              "")
+             ((and
+               (stringp key)
+               (not (eq nil (assoc key god-mod-alist)))
+               (not (eq nil key)))
+              (cdr (assoc key god-mod-alist)))
+             (t
+              (setq key-consumed nil)
+              (cdr (assoc nil god-mod-alist))
+              )))
+      (setq next-key
+            (if key-consumed
+                (god-mode-sanitized-key-string (read-event key-string-so-far))
+              key))
+      (let* ((literal-key-string (concat next-modifier next-key))
+             (translation (lookup-key key-translation-map (kbd literal-key-string)))
+             (next-interpreted-key-string (or translation literal-key-string)))
+        (if key-string-so-far
+            (concat key-string-so-far " " next-interpreted-key-string)
+          next-interpreted-key-string)))))
+
 
 (provide 'simo-core)
 
