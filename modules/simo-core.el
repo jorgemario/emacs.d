@@ -419,8 +419,9 @@
          ("C-o" . helm-occur-from-isearch)
          :map minibuffer-local-map
          ("C-c C-l" . helm-minibuffer-history)
-         :map shell-mode-map
-         ("C-c C-l" . helm-comint-input-ring)))
+                                        ;:map shell-mode-map
+                                        ;("C-c C-l" . helm-comint-input-ring)
+         ))
 
 (use-package markdown-mode
   :ensure t
