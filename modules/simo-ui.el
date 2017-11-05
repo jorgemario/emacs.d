@@ -45,14 +45,14 @@
 ;;   '(flycheck-color-mode-line-error-face ((t (:inherit flycheck-fringe-error :background "#F07667" :foreground "#EFEFEF" :weight normal))))
 ;;   '(flycheck-color-mode-line-warning-face ((t (:inherit flycheck-fringe-warning :background "#DDA0DD" :foreground "#efefef" :weight normal)))))
 
-(use-package spaceline
-  :ensure t
-  :disabled t
-  :config
-  (progn
-    (require 'spaceline-config)
-    (spaceline-spacemacs-theme)
-    (setq powerline-height 20)))
+;; (use-package spaceline
+;;   :ensure t
+;;   :disabled t
+;;   :config
+;;   (progn
+;;     (require 'spaceline-config)
+;;     (spaceline-spacemacs-theme)
+;;     (setq powerline-height 20)))
 
 (use-package smart-mode-line
   :ensure t
@@ -62,7 +62,8 @@
   (setq sml/shorten-directory t
         sml/shorten-modes t)
   (add-to-list 'sml/replacer-regexp-list '("^~/.emacs.d/" ":E:"))
-  (add-to-list 'sml/replacer-regexp-list '("^~/dev/beluca/" ":IMS:")))
+  (add-to-list 'sml/replacer-regexp-list '("^~/dev/beluca/" ":IMS:"))
+  (add-to-list 'sml/replacer-regexp-list '("^~/dev/ms-edge/" ":EDGE:")))
 
 (provide 'simo-ui)
 

@@ -74,6 +74,7 @@
 
 (use-package clojure-mode
   :ensure t
+  :pin melpa-stable
   :config
   (add-hook 'clojure-mode-hook #'paredit-mode)
   (add-hook 'clojure-mode-hook #'subword-mode)
@@ -101,7 +102,6 @@
 
 (use-package cider
   :ensure t
-  :pin melpa-stable
   :config
   (bind-key "C-c C-k"
             '(lambda ()
@@ -117,6 +117,7 @@
 
 (use-package company
   :ensure t
+  :pin melpa-stable
   :diminish company-mode
   :init
   (add-hook 'prog-mode-hook 'company-mode)
@@ -150,8 +151,19 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
+;; --- Scala
+
+(use-package ensime
+  :ensure t
+  :pin melpa-stable
+  :init
+  (add-hook 'scala-mode-hook 'ensime-scala-mode-hook)
+  (add-hook 'scala-mode-hook #'linum-mode))
+
+(with-eval-after-load 'company
+  (define-key company-active-map [tab] nil))
+
 (provide 'simo-programming)
 
-
-
 ;;; simo-programming.el ends here
+

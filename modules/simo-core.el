@@ -20,7 +20,7 @@
 (use-package recentf
   :config
   (setq recentf-save-file (expand-file-name "recentf" simo-savefile-dir)
-        recentf-max-saved-items 500
+        recentf-max-saved-items 200
         recentf-max-menu-items 15
         ;; disable recentf-cleanup on Emacs start, because it can cause
         ;; problems with remote files
@@ -196,6 +196,30 @@
             (define-key LaTeX-mode-map "\C-xn"
               nil)))
 
+(defun copy-line (arg)
+    (interactive "p")
+    (let ((beg (line-beginning-position))
+          (end (line-end-position arg)))
+      (when mark-active
+        (if (> (point) (mark))
+            (setq beg (save-excursion (goto-char (mark)) (line-beginning-position)))
+          (setq end (save-excursion (goto-char (mark)) (line-end-position)))))
+      (if (eq last-command 'copy-line)
+          (kill-append (buffer-substring beg end) (< end beg))
+        (kill-ring-save beg end)))
+    (kill-append "\n" nil)
+    (beginning-of-line (or (and arg (1+ arg)) 2))
+    (if (and arg (not (= 1 arg))) (message "%d lines copied" arg)))
+
+(defun double-line (arg)
+  "copy line and place it below the original"
+  (interactive "p")
+  (copy-line arg)
+  (yank)
+  (move-end-of-line))
+
+(global-set-key (kbd "C-c d") 'double-line)
+
 (use-package avy
   :ensure t
   :bind (("s-." . avy-goto-word-or-subword-1)
@@ -208,8 +232,10 @@
 
 (use-package projectile
   :ensure t
+  :pin melpa-stable
   :bind ("s-p" . projectile-command-map)
   :config
+  (setq projectile-keymap-prefix (kbd "C-c p"))
   (setq projectile-globally-ignored-files
         (append '(".pyc"
                   ".class"
@@ -224,7 +250,7 @@
                   ".idea"
                   "cljsbuild")
                 projectile-globally-ignored-directories))
-  (projectile-mode))
+  (projectile-global-mode))
 
 (use-package pt
   :ensure t)
@@ -353,6 +379,7 @@
 ;; See https://github.com/bbatsov/prelude/blob/master/modules/prelude-helm.el
 (use-package helm
   :ensure t
+  :pin melpa-stable
   :diminish helm-mode
   :init (progn
           (require 'helm-config)
@@ -360,6 +387,7 @@
 
           (use-package helm-projectile
             :ensure t
+            :pin melpa-stable
             :commands helm-projectile
             :bind ("C-c p h" . helm-projectile))
 
@@ -367,10 +395,12 @@
 
           (use-package helm-ag
             :defer 10
-            :ensure t)
+            :ensure t
+            :pin melpa-stable)
 
           (use-package helm-descbinds
-            :ensure t)
+            :ensure t
+            :pin melpa-stable)
 
           (when (executable-find "curl")
             (setq helm-google-suggest-use-curl-p t))
@@ -401,11 +431,12 @@
           (helm-projectile-on))
 
   :bind (("C-c h" . helm-command-prefix)
-         ("C-x b" . helm-buffers-list)
+         ("C-x b" . helm-mini)
          ("M-p" . helm-projectile)
          ("M-o" . simo/recentf)
          ("C-`" . helm-resume)
          ("M-x" . helm-M-x)
+         ("C-x C-b" . helm-buffers-list)
          ("M-y" . helm-show-kill-ring)
          ("C-x C-f" . helm-find-files)
          ("C-h f" . helm-apropos)
@@ -423,14 +454,16 @@
                                         ;("C-c C-l" . helm-comint-input-ring)
          ))
 
+;(key-chord-mode 1)
+;(key-chord-define-global "fm" 'helm-mini)
+;(key-chord-define-global "lm" 'helm-do-ag-this-file)
+
 (use-package markdown-mode
   :ensure t
   :defer t)
 
 (use-package yaml-mode
   :ensure t)
-
-
 
 (use-package zop-to-char
   :ensure t
@@ -538,7 +571,7 @@
 
 (use-package god-mode
   :ensure t
-  ;:disabled t
+  :disabled t
   :bind ("<escape>" . god-mode-all)
   :init
   (god-mode)
