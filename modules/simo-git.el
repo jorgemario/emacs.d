@@ -14,6 +14,9 @@
                        (save-buffer)
                        (magit-status))))
 
+(global-set-key (kbd "C-x N") 'magit-next-commit)
+
 (provide 'simo-git)
 
-;;; simo-magit.el ends here
+;;; simo-git.el ends here
+

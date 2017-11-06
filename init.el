@@ -9,6 +9,8 @@
 
 ;; This is my personal Emacs configuration.
 
+;;; Code:
+
 (require 'package)
 
 ;; Always load newest byte code
@@ -59,6 +61,7 @@
 (require 'simo-programming)
 (require 'simo-git)
 (require 'simo-ui)
+(require 'simo-hydra)
 
 (when (eq system-type 'darwin)
   (message "Loading osx configuration file...")
