@@ -1,4 +1,3 @@
-;;; init.el --- Personal Emacs configuration
 ;;
 ;; URL: https://github.com/jorgemario/emacs.d
 ;; Keywords: convenience
@@ -67,7 +66,7 @@
 (require 'simo-git)
 (require 'simo-ui)
 (require 'simo-hydra)
-(require 'simo-xah)
+;(require 'simo-xah)
 
 (when (eq system-type 'darwin)
   (message "Loading osx configuration file...")

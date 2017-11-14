@@ -25,7 +25,7 @@
   ("e" move-end-of-line "beg")
   ("q" nil "quit"))
 
-(global-set-key (kbd "C-z") #'hydra-vi/body)
+(global-set-key (kbd "C-SPC") #'hydra-vi/body)
 
 (defhydra hydra-window (:exit t :color orange :hint nil)
   "
@@ -69,7 +69,7 @@ Frames: _f_rame new  _df_ delete
                                         ;("b" ido-switch-buffer "buf")
   ("m" headlong-bookmark-jump))
 
-(global-set-key (kbd "C-w") #'hydra-window/body)
+(global-set-key (kbd "C-x SPC") #'hydra-window/body)
 
 
 ;; zoom
