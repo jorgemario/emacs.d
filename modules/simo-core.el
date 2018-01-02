@@ -6,6 +6,10 @@
 ;;; Code:
 
 (require 'use-package)
+
+(use-package diminish
+  :ensure t)
+
 (require 'diminish)
 
 ;; warn when opening files bigger than 100MB

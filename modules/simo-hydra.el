@@ -25,7 +25,7 @@
   ("e" move-end-of-line "beg")
   ("q" nil "quit"))
 
-(global-set-key (kbd "C-SPC") #'hydra-vi/body)
+(global-set-key (kbd "C-c v") #'hydra-vi/body)
 
 (defhydra hydra-window (:exit t :color orange :hint nil)
   "
@@ -69,7 +69,16 @@ Frames: _f_rame new  _df_ delete
                                         ;("b" ido-switch-buffer "buf")
   ("m" headlong-bookmark-jump))
 
-(global-set-key (kbd "C-x SPC") #'hydra-window/body)
+(global-set-key (kbd "M-1") #'hydra-window/body)
+
+
+(defhydra hydra-crux (global-map "C-c r")
+  "Crux"
+  ("u" crux-view-url)
+  ("su" crux-sudo-edit)
+  ("w" crux-swap-windows)
+  ("t" crux-transpose-windows)
+  ("rn" crux-rename-file-and-buffer))
 
 
 ;; zoom
@@ -81,3 +90,5 @@ Frames: _f_rame new  _df_ delete
 (provide 'simo-hydra)
 
 ;;; simo-hydra.el ends here
+
+

@@ -91,6 +91,7 @@
 
 (use-package clj-refactor
   :ensure t
+  :pin melpa-stable
   :bind ("<s-return>" . cljr-add-missing-libspec)
   :config
   (add-hook 'clojure-mode-hook
@@ -102,6 +103,7 @@
 
 (use-package cider
   :ensure t
+  :pin melpa-stable
   :config
   (bind-key "C-c C-k"
             '(lambda ()
