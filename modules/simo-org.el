@@ -10,20 +10,47 @@
 (global-set-key "\C-cb" 'org-iswitchb)
 (setq org-log-done t)
 
-(defun prelude-org-mode-defaults ()
-  (let ((oldmap (cdr (assoc 'prelude-mode minor-mode-map-alist)))
-        (newmap (make-sparse-keymap)))
-    (set-keymap-parent newmap oldmap)
-    (define-key newmap (kbd "C-c +") nil)
-    (define-key newmap (kbd "C-c -") nil)
-    (define-key newmap (kbd "C-a") nil)
-    (make-local-variable 'minor-mode-overriding-map-alist)
-    (push `(prelude-mode . ,newmap) minor-mode-overriding-map-alist))
-)
+(defun simo/org-mode-hook ()
+  (flyspell-mode)
+  (visual-line-mode))
 
-(setq prelude-org-mode-hook 'prelude-org-mode-defaults)
+(add-hook 'org-mode-hook 'simo/org-mode-hook)
 
-(add-hook 'org-mode-hook (lambda () (run-hooks 'prelude-org-mode-hook)))
+(setq org-directory "~/Documents/org")
+
+(setq org-default-notes-file (concat org-directory "/notes.org"))
+
+;; I use C-c c to start capture mode
+(global-set-key (kbd "C-c c") 'org-capture)
+
+;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
+(setq org-capture-templates
+      (quote (("t" "todo" entry (file (concat org-directory "/todo.org"))
+               "* TODO %?\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("n" "note" entry (file (concat org-directory "/notes.org"))
+               "* %? :NOTE:\n%U\n%a\n" :clock-in t :clock-resume t)
+              ("j" "Journal" entry (file+datetree (concat org-directory "/journal.org"))
+               "* %?\n%U\n" :clock-in t :clock-resume t)
+              ("w" "org-protocol" entry (file (concat org-directory "/todo-review.org"))
+               "* TODO Review %c\n%U\n" :immediate-finish t))))
+
+;; stop C-c C-c within code blocks from querying
+(setq org-confirm-babel-evaluate nil)
+
+;; fontify code blocks in org files
+(setq org-src-fontify-natively t)
+
+;; Babel language support for org-mode. Babel allows you to embed
+;; code directly into org files, but you must first specify which
+;; languages to allow. Emacs-lisp should be enabled by default... I
+;; specify it anyways... because it makes me happy.
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((R . t)
+   (sh . t)
+   (emacs-lisp . t)
+   (python . t)
+(scheme . t)))
 
 (provide 'simo-org)
 

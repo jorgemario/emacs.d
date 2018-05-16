@@ -165,6 +165,15 @@
 (with-eval-after-load 'company
   (define-key company-active-map [tab] nil))
 
+(use-package geiser
+  :ensure t
+  :config
+  (setq scheme-program-name "racket")
+  (setq geiser-default-implementation 'racket)
+  ;(setq geiser-racket-binary "/Applications/Racket v6.12/bin/racket")
+  )
+
+
 (provide 'simo-programming)
 
 ;;; simo-programming.el ends here
